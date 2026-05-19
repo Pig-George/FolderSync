@@ -1,5 +1,8 @@
 # Folder Sync
 
+![Version](https://img.shields.io/badge/version-1.0-blue)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
 Real-time folder synchronization tool with GUI, system tray support, and delta-copy for large files.
 
 ## Features
@@ -13,9 +16,25 @@ Real-time folder synchronization tool with GUI, system tray support, and delta-c
 
 ## Quick Start
 
+### Prerequisites
+- Python 3.9+
+
+### Setup
+```bash
+# Create virtual environment
+python -m venv venv
+
+# Activate (Windows)
+venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
 ### Run from source
-```powershell
-.\.venv\Scripts\pythonw.exe sync_app.py
+```bash
+pythonw sync_app.py          # Windows (no console)
+python sync_app.py           # Linux / macOS
 ```
 
 ### Run the packaged exe
@@ -137,36 +156,42 @@ watchdog event → handle_event()
 ## Project Structure
 
 ```
-syncFolder/
-├── sync_app.py            # Main application
-├── sync_settings.json     # Auto-generated user settings
-├── run_sync_app.bat       # Normal launch
-├── run_sync_app_bg.bat    # Tray + auto-start launch
-├── README.md
-├── dist/
-│   └── FolderSync.exe     # Standalone executable
-└── .venv/                 # Python virtual environment
+FolderSync/
+├── sync_app.py            # Main application (GUI + engine + tray)
+├── run_sync_app.bat       # Normal launcher
+├── run_sync_app_bg.bat    # Background launcher (--tray --autostart)
+├── requirements.txt       # Python dependencies
+├── FolderSync.spec        # PyInstaller build spec
+├── .gitignore
+├── LICENSE                # MIT License
+└── README.md
 ```
 
 ## Dependencies
+
+See `requirements.txt`:
 
 - `watchdog` — file system monitoring
 - `pystray` — system tray icon
 - `Pillow` — tray icon generation
 - `tkinter` — GUI (bundled with Python)
+- `pyinstaller` — (optional) for building standalone exe
 
 ## Build
 
-```powershell
-uv venv
-uv pip install watchdog pystray Pillow pyinstaller
-pyinstaller --onefile --windowed --name FolderSync ^
-  --hidden-import watchdog.observers ^
-  --hidden-import pystray._win32 ^
+```bash
+pip install -r requirements.txt
+pyinstaller --onefile --windowed --name FolderSync \
+  --hidden-import watchdog.observers \
+  --hidden-import pystray._win32 \
   sync_app.py
 ```
 
 Output: `dist/FolderSync.exe`
+
+## License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ---
 
