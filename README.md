@@ -1,6 +1,7 @@
 # Folder Sync
 
 ![Version](https://img.shields.io/badge/version-1.0-blue)
+[![CI](https://github.com/Pig-George/FolderSync/actions/workflows/build.yml/badge.svg)](https://github.com/Pig-George/FolderSync/actions/workflows/build.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 Real-time folder synchronization tool with GUI, system tray support, and delta-copy for large files.
@@ -157,13 +158,14 @@ watchdog event → handle_event()
 
 ```
 FolderSync/
-├── sync_app.py            # Main application (GUI + engine + tray)
-├── run_sync_app.bat       # Normal launcher
-├── run_sync_app_bg.bat    # Background launcher (--tray --autostart)
-├── requirements.txt       # Python dependencies
-├── FolderSync.spec        # PyInstaller build spec
+├── sync_app.py                     # Main application (GUI + engine + tray)
+├── run_sync_app.bat                # Normal launcher
+├── run_sync_app_bg.bat             # Background launcher (--tray --autostart)
+├── requirements.txt                # Python dependencies
+├── FolderSync.spec                 # PyInstaller build spec
 ├── .gitignore
-├── LICENSE                # MIT License
+├── .github/workflows/build.yml     # CI/CD (build & release)
+├── LICENSE                         # MIT License
 └── README.md
 ```
 
