@@ -1,0 +1,8 @@
+.venv/
+dist/
+build/
+__pycache__/
+*.pyc
+*.pyo
+sync_settings.json
+test/
