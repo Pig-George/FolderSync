@@ -569,7 +569,7 @@ class MainWindow:
         clear_btn.grid(row=9, column=0, sticky="w", pady=(4, 0))
 
         # ── signature ──
-        sig_label = ttk.Label(main, text="v1.0  by.PigGeorge", font=("", 8), foreground="#888888")
+        sig_label = ttk.Label(main, text="v1.1  by.PigGeorge", font=("", 8), foreground="#888888")
         sig_label.grid(row=9, column=1, sticky="e", pady=(4, 0))
 
         # Configure grid weights
@@ -608,14 +608,57 @@ class MainWindow:
     def _browse_src(self):
         path = filedialog.askdirectory(title="Select Source Folder")
         if path:
+            if not self._validate_folder_not_conflicting(path, is_src=True):
+                return
             self.src_var.set(path)
             self._save_settings()
 
     def _browse_dst(self):
         path = filedialog.askdirectory(title="Select Destination Folder")
         if path:
+            if not self._validate_folder_not_conflicting(path, is_src=False):
+                return
             self.dst_var.set(path)
             self._save_settings()
+
+    def _validate_folder_not_conflicting(self, new_path: str, is_src: bool) -> bool:
+        """Validate that the selected folder doesn't conflict with the other folder."""
+        dst = self.dst_var.get().strip() if is_src else None
+        src = self.src_var.get().strip() if not is_src else None
+        other = dst if is_src else src
+
+        if not other:
+            return True
+
+        try:
+            new_resolved = Path(new_path).resolve()
+            other_resolved = Path(other).resolve()
+
+            if new_resolved == other_resolved:
+                messagebox.showerror(
+                    "Invalid Folder",
+                    "Source and destination folders cannot be the same."
+                )
+                return False
+
+            if other_resolved.is_relative_to(new_resolved):
+                label = "Source" if is_src else "Destination"
+                messagebox.showerror(
+                    "Invalid Folder",
+                    f"The {label.lower()} folder cannot be inside the {'destination' if is_src else 'source'} folder."
+                )
+                return False
+
+            if new_resolved.is_relative_to(other_resolved):
+                label = "Source" if is_src else "Destination"
+                messagebox.showerror(
+                    "Invalid Folder",
+                    f"The {label.lower()} folder cannot be inside the {'source' if is_src else 'destination'} folder."
+                )
+                return False
+        except Exception:
+            pass
+        return True
 
     # ── settings ──
     def _load_saved_settings(self):
@@ -653,15 +696,36 @@ class MainWindow:
             messagebox.showerror("Invalid Folder", f"Source folder does not exist:\n{src}")
             return
 
-        # Prevent syncing to a subfolder of source (would cause infinite loops)
+        dst_path = Path(dst)
+        if not dst_path.exists() or not dst_path.is_dir():
+            messagebox.showerror("Invalid Folder", f"Destination folder does not exist:\n{dst}")
+            return
+
+        # Prevent overlapping source/destination (would cause infinite loops)
         try:
             src_resolved = src_path.resolve()
-            dst_resolved = Path(dst).resolve()
+            dst_resolved = dst_path.resolve()
+
+            if src_resolved == dst_resolved:
+                messagebox.showerror(
+                    "Invalid Folder",
+                    "Source and destination folders cannot be the same."
+                )
+                return
+
             if dst_resolved.is_relative_to(src_resolved):
                 messagebox.showerror(
                     "Invalid Destination",
                     "Destination folder cannot be inside the source folder.\n"
                     "This would cause an infinite sync loop."
+                )
+                return
+
+            if src_resolved.is_relative_to(dst_resolved):
+                messagebox.showerror(
+                    "Invalid Source",
+                    "Source folder cannot be inside the destination folder.\n"
+                    "Please choose a different destination."
                 )
                 return
         except Exception:

@@ -1,6 +1,6 @@
 # Folder Sync
 
-![Version](https://img.shields.io/badge/version-1.0-blue)
+![Version](https://img.shields.io/badge/version-1.1-blue)
 [![CI](https://github.com/Pig-George/FolderSync/actions/workflows/build.yml/badge.svg)](https://github.com/Pig-George/FolderSync/actions/workflows/build.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
@@ -197,4 +197,4 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 ---
 
-v1.0  by.PigGeorge
+v1.1  by.PigGeorge
